@@ -1,0 +1,38 @@
+Final Project Report - Time Series Forecasting (LSTM MC Dropout + Baselines)
+--------------------------------------------------------------------------
+Data source: yfinance
+Rows: 2844
+Date range: 2015-01-02 to 2025-11-26
+
+Model (deep): LSTM with Monte Carlo Dropout
+ - Input window: 60 days, Forecast horizon: 7 days
+ - Hidden size: 64, layers: 2, dropout: 0.2
+ - MC runs: 200
+
+Baselines:
+ - ARIMA(5,1,0) fitted on training series (simple baseline).
+ - Prophet (if available) fitted on training series (optional).
+
+Results (on test windows):
+ - LSTM-MC: RMSE=415.3830, MAE=409.5665, Coverage90=0.6507, NRMSE=0.215934
+ - ARIMA: RMSE=727.0561, MAE=723.7719, Coverage90=0.0007
+ - Prophet: RMSE=1326.2069, MAE=1324.3083, Coverage90=0.0000
+
+Calibration analysis:
+ - Coverage by horizon (LSTM): [0.6722, 0.6699, 0.689, 0.6722, 0.61, 0.7368, 0.5048]
+ - PIT approx samples saved as PIT histogram (pit_hist.jpg).
+
+Files produced:
+- sp500_close.csv (dataset)
+- best_mc_lstm.pth (saved model weights)
+- mc_lstm_traced.pt (TorchScript export, if successful)
+- forecast_sample_comparison.jpg (sample plot)
+- coverage_by_horizon_lstm.jpg
+- pit_hist.jpg
+- comparison_table.csv (comparison table)
+- run_report.txt
+
+Notes & Next steps:
+- ARIMA fitting and Prophet are provided as baselines; depending on data quantity and frequency, consider applying auto_arima
+- For production: persist scaler, model exports, add a serving wrapper (FastAPI/Flask), implement monitoring & periodic retraining
+- For better uncertainty: ensemble multiple architectures + MC Dropout or use quantile/heteroscedastic models
